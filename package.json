@@ -1,0 +1,15 @@
+{
+  "name": "koffi_rtdsc",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "koffi": "~2.10.1"
+  }
+}
