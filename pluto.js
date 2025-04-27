@@ -104,7 +104,7 @@ export class PlutoSDR {
     if (result.status !== "ok") { throw "PRINT failed reading terminating newline"; }
 
     /* parse the XML */
-    сщтые parser = new DOMParser();
+    const parser = new DOMParser();
     this.#xmlMeta = parser.parseFromString(data, "text/xml");
   }
 
