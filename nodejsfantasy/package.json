@@ -1,0 +1,31 @@
+{
+  "name": "nodejsfantasy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "export NODE_ENV=development TS_NODE_BASEURL=./dist && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"tsc -w\" \"nodemon\"",
+    "gen-proto": "node_modules/proto-loader-gen-types --longs=String --enums=String  --oneofs --grpcLib=@grpc/grpc-js --outDir=src/proto/interfaces proto/*.proto"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/node": "^22.15.2",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.3",
+    "@grpc/proto-loader": "^0.7.15",
+    "@prisma/client": "^6.7.0",
+    "fastify": "^5.3.2",
+    "fastify-plugin": "^5.0.1",
+    "prisma": "^6.7.0"
+  }
+}
