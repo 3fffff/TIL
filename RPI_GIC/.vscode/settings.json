@@ -1,0 +1,14 @@
+{
+    "makefile.makefilePath": ".",
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "f:\\pi4-irq-SystemTimer",
+            "binaryPath": "f:\\pi4-irq-SystemTimer\\kernel8.elf",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "mmio.h": "c"
+    }
+}
