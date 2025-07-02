@@ -1,14 +1,23 @@
 {
-    "makefile.makefilePath": ".",
-    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools",
-    "makefile.launchConfigurations": [
-        {
-            "cwd": "f:\\pi4-irq-SystemTimer",
-            "binaryPath": "f:\\pi4-irq-SystemTimer\\kernel8.elf",
-            "binaryArgs": []
-        }
-    ],
     "files.associations": {
-        "mmio.h": "c"
+        "atomic": "c",
+        "bit": "c",
+        "charconv": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "format": "c",
+        "iterator": "c",
+        "limits": "c",
+        "memory": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "xiosbase": "c",
+        "xlocale": "c",
+        "xlocbuf": "c",
+        "xlocmon": "c",
+        "xloctime": "c",
+        "xmemory": "c",
+        "xstring": "c",
+        "xutility": "c"
     }
 }
