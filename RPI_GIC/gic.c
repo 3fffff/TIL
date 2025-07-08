@@ -2,6 +2,7 @@
 #include "armtimer.h"
 #include "systimer.h"
 #include "uart.h"
+#include "aux_uart.h"
 // initialize GIC-400
 static gic400_t gic400;
 void gic_init(void)
@@ -32,10 +33,6 @@ void gic_init(void)
         have 2-bit configuration for each interrupt */
         gic400.gicd->icfg[i / 16] &= (0x3 << (i % 16));
         gic400.gicd->icfg[i / 16] |= (GIC400_ICFG_LEVEL_SENSITIVE << (i % 16));
-
-        /* Deal with register sets that have one interrupt per register */
-        gic400.gicd->ipriority[i] = 0xA0;
-        gic400.gicd->istargets[i] = GIC400_TARGET_CPU0;
     }
 
     gic400.gicd->ctl = GIC400_CTL_ENABLE;
@@ -44,35 +41,45 @@ void gic_init(void)
     gic400.gicc->ctl = GIC400_CTL_ENABLE;
 }
 
-void setIRQ(gic400_irq irq)
+void setIRQ(gic400_irq irq, enum gic_core core)
 {
-    gic400.gicd->isenable[irq / 32] = 1 << (irq % 32);
+    unsigned int n = irq / 32;
+    // enable gic distributor
+    gic400.gicd->isenable[n] |= 1 << (irq % 32);
+    // assign interrupt core
+    /* Deal with register sets that have one interrupt per register */
+    // for uint32
+    // u32 byte_offset = INTID % 4;
+    // u32 shift = byte_offset * 8 + core;
+    gic400.gicd->ipriority[irq] |= 0xA0;
+    gic400.gicd->istargets[irq] |= core;
 }
 
-void dispatch(void)
+void handle_irq(void)
 {
     // get one of the pending "Shared Peripheral Interrupt"
-    unsigned int spi = gic400.gicc->ia;
+    unsigned int spi = gic400.gicc->iar & 0x2FF;
     uart_send('i');
 
-    while (spi != SPURIOUS)
-    { // loop until no SPIs are pending on GIC
-        if (spi == SYSTIMER_COMP3)
-        {
-            uart_send('t');
-            // next in 5sec
-            get_systimer()->compare3 = get_systimer()->counter_lo + 5000000;
-            // clear IRQ in System Timer chip
-            get_systimer()->control_status = 1 << PIT_MASKBIT;
-        }
-        else if (get_armtimer()->MaskedIRQ == 1)
-        {
-            uart_send('A');
-            get_armtimer()->Load = 8388607;
-            get_armtimer()->IRQClear = 1;
-        }
-        // clear the pending
-        gic400.gicc->eoi = spi;
-        spi = gic400.gicc->ia;
+    if (spi == SYSTIMER_COMP3)
+    {
+        uart_send('t');
+        // next in 5sec
+        get_systimer()->compare3 = get_systimer()->counter_lo + 5000000;
+        // clear IRQ in System Timer chip
+        get_systimer()->control_status = 1 << PIT_MASKBIT;
     }
+    else if (spi == AUX)
+    {
+        char c = mini_uart_recv();
+        uart_send(c);
+    }
+    /*  else if (get_armtimer()->MaskedIRQ == 1)
+      {
+          uart_send('A');
+          get_armtimer()->Load = 8388607;
+          get_armtimer()->IRQClear = 1;
+      }*/
+    // clear the pending
+    gic400.gicc->eoi = spi;
 }

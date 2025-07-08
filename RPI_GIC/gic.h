@@ -11,35 +11,69 @@ typedef enum
 {
     ARMTIMER = 64,
     SYSTIMER_COMP0 = 96,
-    SYSTIMER_COMP1 = 97,
-    SYSTIMER_COMP2 = 98,
-    SYSTIMER_COMP3 = 99,
-    H264_0 = 100,
-    H264_1 = 101,
-    H264_2 = 102,
-    JPEG = 103,
-    ISP = 104,
-    USB = 105,
-    V3D = 106,
-    Transposer = 107,
-    Multicore_Sync_0 = 108,
-    Multicore_Sync_1 = 109,
-    Multicore_Sync_2 = 110,
-    Multicore_Sync_3 = 111,
-    DMA_2 = 112,
-    DMA_3 = 113,
-    DMA_4 = 114,
-    DMA_5 = 115,
-    DMA_6 = 116,
-    DMA_7_8 = 117,
-    DMA_9_10 = 118,
-    DMA_11 = 119,
-    DMA_12 = 120,
-    DMA_13 = 121,
-    DMA_14 = 122,
-    AUX = 123,
-    ARM = 124,
-    DMA_15 = 125,
+    SYSTIMER_COMP1,
+    SYSTIMER_COMP2,
+    SYSTIMER_COMP3,
+    H264_0,
+    H264_1,
+    H264_2,
+    JPEG,
+    ISP,
+    USB,
+    V3D,
+    Transposer,
+    Multicore_Sync_0,
+    Multicore_Sync_1,
+    Multicore_Sync_2,
+    Multicore_Sync_3,
+    DMA_0 = 112,
+    DMA_1,
+    DMA_2,
+    DMA_3,
+    DMA_4,
+    DMA_5,
+    DMA_6,
+    DMA_7_8,
+    DMA_9_10,
+    DMA_11,
+    DMA_12,
+    DMA_13,
+    DMA_14,
+    AUX,
+    ARM,
+    DMA_15,
+    HDMI_CEC = 128,
+    HVS,
+    RPIVID,
+    SDC,
+    DSI_0,
+    Pixel_Valve_2,
+    Camera_0,
+    Camera_1,
+    HDMI_0,
+    HDMI_1,
+    Pixel_Valve_3,
+    SPI_BSC_Slave,
+    DSI_1,
+    Pixel_Valve_0,
+    Pixel_Valve_1_4,
+    CPR,
+    SMI = 144,
+    GPIO_0,
+    GPIO_1,
+    GPIO_2,
+    GPIO_3,
+    I2C,
+    SPI,
+    PCM_I2S,
+    SDHOST,
+    UART,
+    ETH_PCIeL2,
+    VEC,
+    CPG,
+    RNG,
+    EMMC_EMMC2,
+    ETH_PCIe_secure = 160,
     SPURIOUS = 1023
 
 } gic400_irq;
@@ -88,6 +122,13 @@ typedef enum
 #define GIC400_TARGET_CPU1 (1 << 1)
 #define GIC400_TARGET_CPU2 (1 << 2)
 #define GIC400_TARGET_CPU3 (1 << 3)
+enum gic_core
+{
+    TARGET_CPU_0 = 1,
+    TARGET_CPU_1 = 2,
+    TARGET_CPU_2 = 4,
+    TARGET_CPU_3 = 8,
+};
 #define GIC400_ICFG_LEVEL_SENSITIVE (0 << 1)
 #define GIC400_ICFG_EDGE_TRIGGERED (1 << 1)
 
@@ -123,7 +164,7 @@ typedef struct
     volatile unsigned int ctl;
     volatile unsigned int pm;
     volatile unsigned int bp;
-    volatile const unsigned int ia;
+    volatile const unsigned int iar;
     volatile unsigned int eoi;
     volatile const unsigned int rp;
     volatile const unsigned int hppi;
@@ -148,5 +189,5 @@ typedef struct
 } gic400_t;
 
 void gic_init(void);
-void setIRQ(gic400_irq irq);
-void dispatch(void);
+void setIRQ(gic400_irq irq,enum gic_core core);
+void handle_irq(void);

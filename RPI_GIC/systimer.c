@@ -4,7 +4,6 @@ static rpi_sys_timer_t *rpiSystemTimer = (rpi_sys_timer_t *)RPI_SYSTIMER_BASE;
 void init_systimer(unsigned int time)
 {
     rpiSystemTimer->compare3 = time;
-    // inital first IRQ in 12sec
     rpiSystemTimer->control_status = 1 << PIT_MASKBIT;
 }
 

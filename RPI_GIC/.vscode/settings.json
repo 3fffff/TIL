@@ -18,6 +18,7 @@
         "xloctime": "c",
         "xmemory": "c",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "stdint.h": "c"
     }
 }

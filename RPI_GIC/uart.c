@@ -3,12 +3,17 @@
 #include "gpio.h"
 #include "mailbox.h"
 static struct uart_t *uart3 = (struct uart_t *)UART3_ADDRESS;
+// a properly aligned message buffer with: 9x4 byte long mes-
+// sage setting feature PL011 UART Clock to 3MHz (and some TAGs and
+// sizes of parameter in message)
+volatile unsigned int __attribute__((aligned(16))) uart_mbox[9] = {36, 0, 0x38002, 12, 8, 2, 3000000, 0, 0};
+
 void uart_init(void)
 {
     // turn off UART3
     uart3->CR = 0;
 
-    mbox_call(0x08);
+    mbox_call(uart_mbox, 0x08);
     // map UART3 to GPIO pins
 
     RPI_SetGpioPinFunction(RPI_GPIO4, FS_ALT4);
@@ -17,7 +22,6 @@ void uart_init(void)
     // remove pullup or pulldown
     RPI_SetPullResistor(RPI_GPIO4, PULL_NONE);
     RPI_SetPullResistor(RPI_GPIO5, PULL_NONE);
-
 
     // clear interrupts in PL011 Chip
     uart3->ICR = 0x7FF;

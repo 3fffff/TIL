@@ -1,31 +1,20 @@
 {
     "configurations": [
         {
-            "name": "ARM-RPi",
+            "name": "Windows",
             "includePath": [
-                "${workspaceFolder}/**",
-                "F:/xpack-aarch64-none-elf-gcc-14.2.1-1.1/aarch64-none-elf/include/**"
+                "F:\\xpack-aarch64-none-elf-gcc-14.2.1-1.1\\lib\\gcc\\aarch64-none-elf\\14.2.1\\include",
+                "${workspaceRoot}"
             ],
-            "defines": [
-                "_DEBUG",
-                "UNICODE",
-                "_UNICODE"
-            ],
-            "compilerPath": "F:\\xpack-aarch64-none-elf-gcc-14.2.1-1.1\\bin\\aarch64-none-elf-gcc",
-            "cStandard": "c17",
-            "cppStandard": "gnu++17",
-            "intelliSenseMode": "gcc-arm",
-            "mergeConfigurations": false,
-            "configurationProvider": "ms-vscode.makefile-tools",
             "browse": {
                 "path": [
-                    "${workspaceFolder}"
-                ],
-                "limitSymbolsToIncludedHeaders": true
+                    "${workspaceRoot}"
+                ]
             },
-            "compilerArgs": [
-                "-ffreestanding"
-            ]
+            "intelliSenseMode": "gcc-arm64",
+            "compilerPath": "F:\\xpack-aarch64-none-elf-gcc-14.2.1-1.1\\bin\\aarch64-none-elf-gcc",
+            "cStandard": "c17",
+            "cppStandard": "c++17"
         }
     ],
     "version": 4

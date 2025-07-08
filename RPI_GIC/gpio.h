@@ -4,6 +4,9 @@
 // implemented in startup.S
 extern void PUT32(unsigned int, unsigned int);
 extern unsigned int GET32(unsigned int);
+extern void irq_disable();
+extern void irq_enable();
+extern void irq_barrier();
 
 #define PERIPHERAL_BASE 0xFE000000
 /** The base address of the GPIO peripheral (ARM Physical Address) */

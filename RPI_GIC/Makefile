@@ -3,26 +3,30 @@ ASM = aarch64-none-elf-gcc
 CXX = aarch64-none-elf-gcc
 LINKER = aarch64-none-elf-ld
 OBJCPY = aarch64-none-elf-objcopy
-
-CFILES = $(wildcard ./*.c)
-OFILES = $(CFILES:.c=.o)
+BUILD_DIR = build
+SRCS = $(wildcard *.c)
+SFILES = $(wildcard asm/*.S)
+OBJS := $(patsubst %.c, $(BUILD_DIR)/%.o, $(SRCS)) $(patsubst asm/%.S, $(BUILD_DIR)/%.o, $(SFILES))
 INCLUDES = -I./
-GCCFLAGS = -Wall -O0 -ffreestanding -nostdinc -nostdlib -nostartfiles -mstrict-align
+GCCFLAGS =  -Wall -O0 -ffreestanding -nostdlib -nostartfiles -mstrict-align
 LDFLAGS = -nostdlib  $(INCLUDES)
 DELETE = rm
 
-all: clean kernel8.img
+all: clean createobj kernel8.img
 
-startup.o: startup.S
-	$(TOOLCHAIN_PATH)/$(ASM) $(GCCFLAGS) -g -c startup.S -o startup.o
+$(BUILD_DIR)/%.o: asm/%.S
+	$(TOOLCHAIN_PATH)/$(ASM) $(GCCFLAGS) -g -c $< -o $@
 
-%.o: %.c
-	$(TOOLCHAIN_PATH)/$(CXX) $(GCCFLAGS) -g -c $< -o $@
-
-kernel8.img: startup.o $(OFILES)
-	$(TOOLCHAIN_PATH)/$(LINKER) $(LDFLAGS) startup.o $(OFILES) -T link.ld -o kernel8.elf
+$(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
+	$(TOOLCHAIN_PATH)/$(CXX) $(GCCFLAGS) -g -c $^ -o $@
+kernel8.img: $(OBJS)
+	$(TOOLCHAIN_PATH)/$(LINKER) $(LDFLAGS) $(OBJS) -T link.ld -o kernel8.elf
 	$(TOOLCHAIN_PATH)/$(OBJCPY) -O binary kernel8.elf kernel8.img
 
 clean:
 	$(DELETE) -rf kernel8.img
-	$(DELETE) -rf startup.o kernel8.elf $(OFILES)
+	$(DELETE) -rf kernel8.elf $(OBJS)
+	$(DELETE) -rf $(BUILD_DIR)
+
+createobj:
+	mkdir $(BUILD_DIR)
